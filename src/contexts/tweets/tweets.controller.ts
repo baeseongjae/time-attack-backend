@@ -26,4 +26,27 @@ tweetsController.post("/", userOnly, async (req, res, next) => {
   }
 });
 
+tweetsController.patch("/:tweetId", userOnly, async (req, res, next) => {
+  try {
+    const { title, content } = req.body;
+    const tweetId = Number(req.params.tweetId);
+    const tweet = await tweetsService.updateTweet({ tweetId, title, content });
+
+    res.json(tweet);
+  } catch (e) {
+    next(e);
+  }
+});
+
+tweetsController.delete("/:tweetId", userOnly, async (req, res, next) => {
+  try {
+    const tweetId = Number(req.params.tweetId);
+    const tweet = await tweetsService.deleteTweet({ tweetId });
+
+    res.json(tweet);
+  } catch (e) {
+    next(e);
+  }
+});
+
 export default tweetsController;
