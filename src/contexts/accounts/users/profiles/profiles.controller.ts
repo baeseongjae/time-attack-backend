@@ -1,4 +1,5 @@
 import { Router } from "express";
+import userOnly from "../../../../guards/userOnly.guard";
 import profilesService from "./profiles.service";
 
 const profilesController = Router();
@@ -16,8 +17,17 @@ profilesController.get("/:userId", async (req, res, next) => {
 });
 
 // 프로필 정보 업데이트
-profilesController.put("/", (req, res, next) => {
+profilesController.put("/", userOnly, async (req, res, next) => {
   try {
+    const userId = req.user!.id;
+    const { nickname, description } = req.body;
+    const profile = await profilesService.updateProfile({
+      userId,
+      nickname,
+      description,
+    });
+
+    res.json(profile);
   } catch (e) {
     next(e);
   }
