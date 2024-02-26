@@ -1,9 +1,9 @@
 import prismaClient from "../../../db/prisma/client.prisma";
-import { UpdateCommentDto, commentDto } from "./comments.type";
+import { CreateCommentDto, UpdateCommentDto } from "./comments.type";
 
 class CommentsService {
-  async createCommentOnTweet(commentDto: commentDto) {
-    const { tweetId, authorId, content } = commentDto;
+  async createCommentOnTweet(createCommentDto: CreateCommentDto) {
+    const { tweetId, authorId, content } = createCommentDto;
 
     const comment = await prismaClient.comment.create({
       data: {

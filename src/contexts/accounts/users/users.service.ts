@@ -4,17 +4,28 @@ import { sign } from "jsonwebtoken";
 import { nanoid } from "nanoid";
 import { JWT_SECRET_KEY } from "../../../config";
 import prismaClient from "../../../db/prisma/client.prisma";
-import { LogInDto, SignUpDto } from "./users.dto";
+import { checkEmail } from "../../../utils/checkEmail";
+import { LogInDto, SignUpDto } from "./users.type";
 
 class UsersService {
   async signUp(signUpDto: SignUpDto) {
-    const { email, password } = signUpDto;
+    const { email, password, nickname, description } = signUpDto;
     const id = nanoid();
+
+    // 이메일 및 패스워드 유효성 검사
+    if (!checkEmail(email)) throw new Error("Invalid Email format");
+    if (password.length < 8)
+      throw new Error("Password length must be at least 8 characters ");
+
     const encryptedPassword = await hash(password, 12);
 
     const user = await prismaClient.user.create({
-      data: { id, email, encryptedPassword },
+      data: { id, email, encryptedPassword, nickname, description },
     });
+
+    // 회원가입 하는 즉시 프로필 등록
+    const profile = await this.registerProfile(user);
+    console.log(profile);
 
     const accessToken = this.generateToken(user);
 
@@ -46,6 +57,20 @@ class UsersService {
     });
 
     return accessToken;
+  }
+
+  // 유저 프로필 등록 함수
+  async registerProfile(user: User) {
+    const { id, nickname, description } = user;
+    const profile = await prismaClient.userProfile.create({
+      data: {
+        userId: id,
+        nickname,
+        description,
+      },
+    });
+
+    return profile;
   }
 }
 

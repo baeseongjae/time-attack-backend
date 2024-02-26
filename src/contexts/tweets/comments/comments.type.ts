@@ -1,4 +1,4 @@
-export type CommentDto = {
+export type CreateCommentDto = {
   tweetId: number;
   authorId: string;
   content: string;
