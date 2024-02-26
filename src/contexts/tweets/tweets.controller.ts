@@ -1,11 +1,13 @@
 import { Router } from "express";
 import userOnly from "../../guards/userOnly.guard";
+import bookmarksController from "./bookmarks/bookmarks.controller";
 import commentsController from "./comments/comments.controller";
 import tweetsService from "./tweets.service";
 
 const tweetsController = Router();
 
 tweetsController.use("/comments", commentsController);
+tweetsController.use("/bookmarks", bookmarksController);
 
 tweetsController.get("/", async (_, res, next) => {
   try {
