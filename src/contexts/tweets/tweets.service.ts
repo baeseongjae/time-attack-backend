@@ -3,7 +3,12 @@ import { CreateTweetDto, UpdateTweetDto } from "./tweets.type";
 
 class TweetsService {
   async getTweets() {
-    const tweets = await prismaClient.tweet.findMany();
+    const tweets = await prismaClient.tweet.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: { comments: true },
+    });
 
     return tweets;
   }
