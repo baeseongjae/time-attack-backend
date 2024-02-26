@@ -1,5 +1,5 @@
 import prismaClient from "../../../db/prisma/client.prisma";
-import { commentDto } from "./comments.type";
+import { UpdateCommentDto, commentDto } from "./comments.type";
 
 class CommentsService {
   async createCommentOnTweet(commentDto: commentDto) {
@@ -11,6 +11,27 @@ class CommentsService {
         author: { connect: { id: authorId } },
         tweet: { connect: { id: tweetId } },
       },
+    });
+
+    return comment;
+  }
+
+  async updateComment(updateCommentDto: UpdateCommentDto) {
+    const { commentId, content } = updateCommentDto;
+
+    const comment = await prismaClient.comment.update({
+      where: { id: commentId },
+      data: {
+        content,
+      },
+    });
+
+    return comment;
+  }
+
+  async deleteComment({ commentId }: { commentId: number }) {
+    const comment = await prismaClient.comment.delete({
+      where: { id: commentId },
     });
 
     return comment;
