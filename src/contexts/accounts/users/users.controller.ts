@@ -1,4 +1,5 @@
 import { Router } from "express";
+import profilesController from "./profiles/profiles.controller";
 import usersService from "./users.service";
 
 const usersController = Router();
@@ -23,5 +24,7 @@ usersController.post("/log-in", async (req, res, next) => {
     next(e);
   }
 });
+
+usersController.use("/", profilesController);
 
 export default usersController;
