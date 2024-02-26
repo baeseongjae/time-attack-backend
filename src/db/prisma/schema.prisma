@@ -24,6 +24,8 @@ model User {
   tweetsIWrote      Tweet[]
   commentsIWrote    Comment[]
   bookmarks         Bookmark[]
+  followings        User[]       @relation("UsersFollows")
+  followers         User[]       @relation("UsersFollows")
 }
 
 model UserProfile {

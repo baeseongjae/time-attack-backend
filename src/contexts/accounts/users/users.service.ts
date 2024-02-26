@@ -62,6 +62,8 @@ class UsersService {
   // 유저 프로필 등록 함수
   async registerProfile(user: User) {
     const { id, nickname, description } = user;
+    // 닉네임 중복여부
+
     const profile = await prismaClient.userProfile.create({
       data: {
         userId: id,
